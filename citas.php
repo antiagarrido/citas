@@ -35,7 +35,7 @@ foreach ($citas as $cita){
 
     array_push($citas_ocupadas, array($fecha_formateada, $hora));
 
-   
+   echo "$fecha_formateada $hora";
 }
 
 
@@ -47,7 +47,9 @@ foreach ($citas as $cita){
  <div class="d-flex flex-wrap justify-content-center">
 <?php
 
-    for($dia=$hoy; strtotime($dia)<= strtotime($hoy."+ $dias_agenda days"); $dia = date("d-m-Y", strtotime($dia."+ 1 days"))){
+    $dia =date("d-m-Y", strtotime($hoy."+ 1 days"));
+
+    for($dia; strtotime($dia)<= strtotime($hoy."+ $dias_agenda days"); $dia = date("d-m-Y", strtotime($dia."+ 1 days"))){
 
 
             echo "<table class='table table-hover table-sm me-3 mb-3 text-center' style='width: 200px;'>
@@ -70,8 +72,10 @@ foreach ($citas as $cita){
                         $minutos= "0$minutos";
                     }
 
+                    $horario = "$hora:$minutos";
 
-                    echo "<tr><td>$hora:$minutos <i class='bi bi-circle-fill ms-2'></i></i></td></tr>";
+
+                    echo "<tr><td>$horario<i class='bi bi-circle-fill ms-2'></i></i></td></tr>";
 
                     
 
