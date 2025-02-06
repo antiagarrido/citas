@@ -50,6 +50,8 @@
 
         comprobar_sesion();
 
+
+        //Comprueba la sesión y según esto muestra un mensaje o un formulario
         function comprobar_sesion(){
             $.post(
                 "usuario.php",
@@ -70,7 +72,7 @@
         }
 
 
-
+        //Solicita destruir la sesión y que se recarguen las citas
         function limpiar_usuario(){
             $.post(
                 "usuario.php",
@@ -84,7 +86,7 @@
             }
         
 
-
+        //LLama al documento para crear el usuario en la sesión
         function asignar_usuario() {
 
             var asegurado = $("#usuario").val();
@@ -99,7 +101,7 @@
             )
         }
 
-
+        //HTML que muestra los datos del asegurado  
         function mostrar_asegurado(asegurado) {
 
             var boton = " <button class='btn btn-warning btn-sm ms-2 ' onclick='limpiar_usuario()'> Modificar</button>"
@@ -108,7 +110,7 @@
 
         }
 
-
+        //Llama al documento para que compruebe y muestre el estado de las citas
         function vercitas() {
 
             $.post(
@@ -122,6 +124,7 @@
         }
 
 
+          //HTML que muestra el formulario para el asegurado
         function formulario_usuario(){
 
             var boton = "<button class='btn btn-success' onclick='asignar_usuario()'>Aceptar</button>";
