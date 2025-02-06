@@ -3,18 +3,28 @@
 
 include("conexion.php");
 
+
+//Datos del horario 
+
 $hora_incio=8;
 $hora_fin=9;
 
 $dias_agenda=7;
 
 
+//Minutos que va a durar la cita 
+
+$min_cita=5;
+
+
 $hoy = date("d-m-Y");
 
-
+//Array donde se guardan las consultas
 $citas_ocupadas= array();
 $citas_usuario=array();
 
+
+//Inciciamos y comprobamos sesión; 
 session_start();
 
 
@@ -22,7 +32,7 @@ if (isset($_SESSION["usuario"])){
 
     if($_SESSION["usuario"] != ""){
 
-       
+    //Si hay usuario en la sesión hacemos la consulta de sus citas y rellenamos el array de las citas del usuario   
         
     $usuario = $_SESSION["usuario"];
 
@@ -47,6 +57,7 @@ if (isset($_SESSION["usuario"])){
 }
 
 
+// Consultamos todas las citas que hay y rellenamos el array 
 
 $sql_citas = "SELECT fecha_cita, hora_cita FROM citas ";
 
@@ -73,7 +84,12 @@ foreach ($citas as $cita){
             <div class="d-flex flex-wrap justify-content-center">
             <?php
 
+
+                 //Hacemos que la posibilidad de citas comience mañana 
                 $dia =date("d-m-Y", strtotime($hoy."+ 1 days"));
+
+
+                //Recorremos los días de los que vamos a ofrecer las citas
 
                 for($dia; strtotime($dia)<= strtotime($hoy."+ $dias_agenda days"); $dia = date("d-m-Y", strtotime($dia."+ 1 days"))){
 
@@ -83,28 +99,40 @@ foreach ($citas as $cita){
                                     <th> $dia</th> 
                                 </thead>
                                 
-                                <tbody>";            
+                                <tbody>";    
+                                
+                                
+                        //Recorremos las horas que están dentro del intervalo del horario
                 
                         for($hora=$hora_incio; $hora<$hora_fin; $hora++ ){
                             if($hora <10){
-                                $hora = "0$hora";
+                                $hora = "0$hora"; //Formato para horas de un dígito. 
                             }
 
 
-                            for ($minutos = 0; $minutos < 60; $minutos += 5) {
+                            //Recorremos los minutos de cada hora segun la duracion de la cita
+
+                            for ($minutos = 0; $minutos < 60; $minutos += $min_cita) {
 
                                 if($minutos<10){
 
-                                    $minutos= "0$minutos";
+                                    $minutos= "0$minutos"; //Formato para minutos de un dígito. 
                                 }
 
-                                $horario = "$hora:$minutos";
+                                $horario = "$hora:$minutos"; //Horario compuesto por hora y minutos
 
-                                $horario_array= "$hora:$minutos:00";
+                                $horario_array= "$hora:$minutos:00"; //Formato para que coincida con el formato de los arrays
 
+                             
+                              
+                              //Comprobamos qué citas están ocupadas, de ellas cuales son del usuario actual y establecemos clase de bootstrap diferente en cada caso 
 
                                 if(in_array(array($dia,$horario_array),$citas_ocupadas)){
                                     $color ="text-danger";
+
+                                    if(in_array(array($dia,$horario_array),$citas_usuario)){
+                                        $color= "text-primary";
+                                    }
 
                                 
                                 }else{
@@ -113,9 +141,6 @@ foreach ($citas as $cita){
                                    
                                 }
 
-                                if(in_array(array($dia,$horario_array),$citas_usuario)){
-                                    $color= "text-primary";
-                                }
 
                                 echo "<tr><td>$horario<i class='bi bi-droplet-fill $color ms-2'></i></i></td></tr>";
                                 
