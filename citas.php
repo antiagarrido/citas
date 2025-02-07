@@ -12,14 +12,14 @@ $hora_fin=9;
 $dias_agenda=7;
 
 
-//Minutos que va a durar la cita 
+//Intervalo de minutos entre los que hay cita 
 
 $min_cita=5;
 
 
 $hoy = date("d-m-Y");
 
-//Array donde se guardan las consultas
+//Array donde se guardan las consultas de citas
 $citas_ocupadas= array();
 $citas_usuario=array();
 
@@ -37,7 +37,7 @@ if (isset($_SESSION["usuario"])){
     $usuario = $_SESSION["usuario"];
 
 
-    $sql_usuario = "SELECT fecha_cita, hora_cita FROM citas WHERE num_usu='$usuario'";
+    $sql_usuario = "SELECT  fecha_cita, hora_cita FROM citas WHERE num_usu='$usuario'";
 
     $citas= $conexion->query($sql_usuario);
 
@@ -50,7 +50,6 @@ if (isset($_SESSION["usuario"])){
 
             array_push($citas_usuario, array($fecha_formateada, $hora));
 
-            echo "$fecha_formateada $hora";
         }
     }
 
@@ -129,20 +128,25 @@ foreach ($citas as $cita){
 
                                 if(in_array(array($dia,$horario_array),$citas_ocupadas)){
                                     $color ="text-danger";
+									$onclick="#";
 
                                     if(in_array(array($dia,$horario_array),$citas_usuario)){
                                         $color= "text-primary";
+										$onclick= "cancelar_cita(`$dia`,`$horario`)";
+										
+
                                     }
 
                                 
                                 }else{
 
                                     $color="text-success";
+									$onclick="citar(`$dia`,`$horario`)";
                                    
                                 }
 
 
-                                echo "<tr><td>$horario<i class='bi bi-droplet-fill $color ms-2'></i></i></td></tr>";
+                                echo "<tr><td >$horario<i onclick='$onclick' class='bi bi-droplet-fill $color ms-2'></i></td></tr>";
                                 
 
                             }
