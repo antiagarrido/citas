@@ -20,37 +20,35 @@
 </head>
 
 <style>
-    body{
+    body {
         background-image: url("img/fondo.jpg");
-        background-size: 100%;     
-        
+        background-size: 100%;
+
     }
 
-    #contenedor{
+    #contenedor {
         padding: 7px;
         background-color: white;
         margin-top: 10vh;
         border-radius: 7px;
     }
 
-    #form_asegurado{
+    #form_asegurado {
         display: flex;
         align-items: center;
-        gap: 10px; 
+        gap: 10px;
     }
 
-    .btn-primary{
+    .btn-primary {
 
         background-color: rgb(143, 187, 238);
         border: none;
     }
-    .btn-warning{
+
+    .btn-warning {
         background-color: rgba(245, 192, 93, 0.851);
         border: none;
     }
-
- 
-
 </style>
 
 <body>
@@ -62,7 +60,7 @@
 
         <div class="row">
             <div class="col-12 d-flex justify-content-center mb-3">
-                <div id="asegurado">                   
+                <div id="asegurado">
                 </div>
             </div>
         </div>
@@ -79,14 +77,15 @@
         <div class="row">
 
             <div id="leyenda">
-            
+
                 <p class="text text-center mt-4"> <i class='bi bi-droplet-fill text-success ms-2'>Disponibles</i>
-                      <i class='bi bi-droplet-fill text-primary ms-2'>Tus citas</i>
-                     <i class='bi bi-droplet-fill text-danger ms-2'>No disponibles</i></p>
+                    <i class='bi bi-droplet-fill text-primary ms-2'>Tus citas</i>
+                    <i class='bi bi-droplet-fill text-danger ms-2'>No disponibles</i>
+                </p>
             </div>
         </div>
-       
-       
+
+
     </div>
 
 
@@ -94,9 +93,9 @@
 
         comprobar_sesion();
 
-        //llama al documento que registrta la cita y muestra alert con el resultado.
-        function cancelar_cita(dia,horario){
-            
+        //Muestra los datos de la cita y da la posibilidad de eliminarla
+
+        function mostrar_cita(dia, horario) {
 
             $.confirm({
                 title: 'Tu cita',
@@ -114,14 +113,14 @@
                             $.confirm({
                                 title: '¿Seguro que quieres cancelar tu cita?',
                                 content: "",
-                                type:"red",
+                                type: "red",
                                 theme: 'modern',
                                 animation: 'zoom',
                                 buttons: {
                                     Sí: {
                                         text: 'Sí',
                                         action: function () {
-                                            post();
+                                            cancelar_cita();
                                         }
                                     },
                                     No: {
@@ -136,117 +135,158 @@
                     }
                 }
             });
-                
-                
-
-                function post(){
-                    $.post(
-                            "cita.php",
-                            {dia:dia, hora:horario, accion:"cancelar"},
-                            function(echo){
-
-                                    if(echo=="cancelada"){
-                                        $.alert("Cita cancelada correctamente");
-                                    }else if(echo =="no_usuario"){
-                                        $.alert(" Primero debes introducir tu número de asegurado");
 
 
+        }
+
+        //llama al documento que cancela la cita y muestra alert con el resultado.
+        function cancelar_cita(dia, horario) {
+
+
+            $.confirm({
+                title: 'Tu cita',
+                content: "Tienes cita el " + dia + " a las " + horario,
+                type: 'blue',
+                theme: 'modern',
+                animation: 'zoom',
+                buttons: {
+                    Volver: function () {
+                    },
+                    Eliminar: {
+                        text: 'Eliminar',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            $.confirm({
+                                title: '¿Seguro que quieres cancelar tu cita?',
+                                content: "",
+                                type: "red",
+                                theme: 'modern',
+                                animation: 'zoom',
+                                buttons: {
+                                    Sí: {
+                                        text: 'Sí',
+                                        action: function () {
+                                            $.post(
+                                                "cita.php",
+                                                { dia: dia, hora: horario, accion: "cancelar" },
+                                                function (echo) {
+
+                                                    if (echo == "cancelada") {
+                                                        $.alert("Cita cancelada correctamente");
+                                                    } else if (echo == "no_usuario") {
+                                                        $.alert(" Primero debes introducir tu número de asegurado");
+                                                    }
+
+                                                    vercitas(); //Actualizamos el estado de las citas
+                                                }
+                                            )
+                                        }
+                                    },
+                                    No: {
+                                        text: 'No',
+                                        action: function () {
+                                            $.alert('No hemos cancelado la cita');
+                                        }
                                     }
-
-                                    vercitas();
-                            }
-                        )
+                                }
+                            });
+                        }
+                    }
                 }
+            });
+
            
-             vercitas();
+
         }
 
         //llama al documento que registrta la cita y muestra alert con el resultado.
-        function citar(dia,horario){
-            
-             $.post(
+        function citar(dia, horario) {
+
+            $.post(
                 "cita.php",
-               {dia:dia, hora:horario, accion:"nueva"},
-                function(echo){
+                { dia: dia, hora: horario, accion: "nueva" },
+                function (echo) {
 
-                        if(echo=="registrada"){
-                            $.alert({
-                                title: 'Cita registrada',
-                                content: 'Tu cita ha sido registrada correctamente.',
-                                animation: 'zoom',
-                                type: 'green',
-                                theme: 'modern', 
-                                buttons: {
-                                    OK: {
-                                        text: 'Aceptar',
-                                        btnClass: 'btn-green'
-                                    }
+                    if (echo == "registrada") {
+                        $.alert({
+                            title: 'Cita registrada',
+                            content: 'Tu cita ha sido registrada correctamente.',
+                            animation: 'zoom',
+                            type: 'green',
+                            theme: 'modern',
+                            buttons: {
+                                OK: {
+                                    text: 'Aceptar',
+                                    btnClass: 'btn-green'
                                 }
-                            });
-                        }else if(echo =="no_usuario"){
+                            }
+                        });
+                    } else if (echo == "no_usuario") {
 
-                            $("#usuario").focus();
-                            $.alert({
-                                title: "",
-                                content:"Primero debes introducir tu número de asegurado ",
-                                animation: 'zoom',
-                                type:"red",
-                                theme:"modern",
-                                buttons: {
-                                    OK: {
-                                        text: 'Aceptar',
-                                    }
+                        $("#usuario").focus();
+                        $.alert({
+                            title: "",
+                            content: "Primero debes introducir tu número de asegurado ",
+                            animation: 'zoom',
+                            type: "red",
+                            theme: "modern",
+                            buttons: {
+                                OK: {
+                                    text: 'Aceptar',
                                 }
+                            }
 
-                            });
-                           
-                          
-                        }
-                        vercitas();
+                        });
+
+
+                    }
+
+                    vercitas();
+
 
                 }
-             )
+            )
+           
 
-          
-            }
+
+        }
 
 
 
         //Comprueba la sesión y según esto muestra un mensaje o un formulario
-        function comprobar_sesion(){
+        function comprobar_sesion() {
             $.post(
                 "usuario.php",
-                {accion: "comprobar"},
+                { accion: "comprobar" },
                 function (echosdelphp) {
 
-                    if(echosdelphp==""){
+                    if (echosdelphp == "") {
                         formulario_usuario();
                         limpiar_usuario();
-                    }else{
+                    } else {
                         mostrar_asegurado(echosdelphp);
                     }
 
-                     vercitas();
+                    vercitas();
 
 
-                                      
+
                 })
         }
 
 
         //Solicita destruir la sesión y que se recarguen las citas
-        function limpiar_usuario(){
+        function limpiar_usuario() {
             $.post(
                 "usuario.php",
                 { accion: "limpiar" },
                 function () {
-                    formulario_usuario();                   
+                    formulario_usuario();
                 })
 
-               vercitas();
 
-            }
-        
+        }
+
 
         //LLama al documento para crear el usuario en la sesión
         function asignar_usuario() {
@@ -273,7 +313,7 @@
         }
 
         //Llama al documento para que compruebe y muestre el estado de las citas
-        function vercitas() {            
+        function vercitas() {
             $.post(
                 "citas.php",
                 {},
@@ -285,12 +325,12 @@
         }
 
 
-          //HTML que muestra el formulario para el asegurado
-        function formulario_usuario(){
+        //HTML que muestra el formulario para el asegurado
+        function formulario_usuario() {
 
             var boton = "<button class='btn btn-primary btn-sm' onclick='asignar_usuario()'>Aceptar</button>";
 
-            var html_asegurado="<div id='form_asegurado'><input type='text' id='usuario' class='form-control' placeholder='Número de asegurado'> "+  boton + "</div> "  ;
+            var html_asegurado = "<div id='form_asegurado'><input type='text' id='usuario' class='form-control' placeholder='Número de asegurado'> " + boton + "</div> ";
 
             $("#asegurado").html(html_asegurado);
         }
