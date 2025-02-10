@@ -130,7 +130,7 @@ foreach ($citas as $cita){
                                     $color ="text-danger";
 									$onclick="#";
                                     $ayuda= "Cita no disponible";
-                                    $cursor="none";
+                                    $cursor="no-drop";
 
                                     if(in_array(array($dia,$horario_array),$citas_usuario)){
                                         $color= "text-primary";
