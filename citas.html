@@ -110,27 +110,7 @@
                         text: 'Eliminar',
                         btnClass: 'btn-red',
                         action: function () {
-                            $.confirm({
-                                title: '¿Seguro que quieres cancelar tu cita?',
-                                content: "",
-                                type: "red",
-                                theme: 'modern',
-                                animation: 'zoom',
-                                buttons: {
-                                    Sí: {
-                                        text: 'Sí',
-                                        action: function () {
-                                            cancelar_cita();
-                                        }
-                                    },
-                                    No: {
-                                        text: 'No',
-                                        action: function () {
-                                            $.alert('No hemos cancelado la cita');
-                                        }
-                                    }
-                                }
-                            });
+                            cancelar_cita(dia,horario);
                         }
                     }
                 }
@@ -143,19 +123,6 @@
         function cancelar_cita(dia, horario) {
 
 
-            $.confirm({
-                title: 'Tu cita',
-                content: "Tienes cita el " + dia + " a las " + horario,
-                type: 'blue',
-                theme: 'modern',
-                animation: 'zoom',
-                buttons: {
-                    Volver: function () {
-                    },
-                    Eliminar: {
-                        text: 'Eliminar',
-                        btnClass: 'btn-red',
-                        action: function () {
                             $.confirm({
                                 title: '¿Seguro que quieres cancelar tu cita?',
                                 content: "",
@@ -191,13 +158,7 @@
                                 }
                             });
                         }
-                    }
-                }
-            });
-
-           
-
-        }
+                
 
         //llama al documento que registrta la cita y muestra alert con el resultado.
         function citar(dia, horario) {

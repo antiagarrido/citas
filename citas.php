@@ -129,10 +129,14 @@ foreach ($citas as $cita){
                                 if(in_array(array($dia,$horario_array),$citas_ocupadas)){
                                     $color ="text-danger";
 									$onclick="#";
+                                    $ayuda= "Cita no disponible";
+                                    $cursor="none";
 
                                     if(in_array(array($dia,$horario_array),$citas_usuario)){
                                         $color= "text-primary";
-										$onclick= "cancelar_cita(`$dia`,`$horario`)";
+										$onclick= "mostrar_cita(`$dia`,`$horario`)";
+                                        $ayuda= "Cita reservada: haz click para verla";
+                                        $cursor="pointer";
 										
 
                                     }
@@ -142,11 +146,13 @@ foreach ($citas as $cita){
 
                                     $color="text-success";
 									$onclick="citar(`$dia`,`$horario`)";
+                                    $ayuda= "Cita disponible: haz click para reservar";
+                                    $cursor="pointer";
                                    
                                 }
 
 
-                                echo "<tr><td >$horario<i onclick='$onclick' class='bi bi-droplet-fill $color ms-2'></i></td></tr>";
+                                echo "<tr><td>$horario <abbr title='$ayuda'><i onclick='$onclick' class='bi bi-droplet-fill $color ms-2' style='cursor:$cursor'></i></abbr></td></tr>";
                                 
 
                             }
